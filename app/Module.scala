@@ -1,10 +1,9 @@
 import com.google.inject.AbstractModule
-
 import net.codingwell.scalaguice.ScalaModule
 
-import org.byrde.config.ConfigurationProvider
-import org.byrde.guice.{Modules, OnStart}
-import org.byrde.persistence.{Persistence, Tables}
+import org.shortener.loggers.impl.ErrorLogger
+import org.shortener.persistence.impl.URLMemoryStorage
+import org.shortener.persistence.URLStorage
 
 /**
   * This class is a Guice module that tells Guice how to bind several
@@ -18,10 +17,7 @@ import org.byrde.persistence.{Persistence, Tables}
   */
 class Module extends AbstractModule with ScalaModule {
   override def configure(): Unit = {
-    bind[ConfigurationProvider]
-    bind[Persistence]
-    bind[Tables]
-    bind[Modules].asEagerSingleton()
-    bind[OnStart].asEagerSingleton()
+    bind[URLStorage].to[URLMemoryStorage].asEagerSingleton()
+    bind[ErrorLogger].asEagerSingleton()
   }
 }

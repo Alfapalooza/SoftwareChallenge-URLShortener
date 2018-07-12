@@ -2,43 +2,47 @@ package controllers
 
 import javax.inject._
 
-import org.byrde.commons.controllers.actions.auth.AuthorizedAction
-import org.byrde.commons.utils.auth.conf.JwtConfig
-import org.byrde.guice.Modules
+import org.shortener.persistence.URLStorage
+import org.shortener.utils.ThreadPools
 
-import play.api.cache.Cached
+import controllers.requests.URLRequest
+import models.{Alert, Token}
+
+import play.api.Configuration
 import play.api.mvc._
 
-import akka.stream.Materializer
+import scala.concurrent.{ExecutionContext, Future}
 
-import scala.concurrent.ExecutionContext
-
-/**
-  * This controller creates an `Action` to handle HTTP requests to the
-  * application's home page.
-  */
 @Singleton
-class HomeController @Inject()(cached: Cached,
-                               parser: BodyParsers.Default,
-                               actorSystem : akka.actor.ActorSystem,
-                               applicationModules: Modules)(implicit mat: Materializer) extends InjectedController {
+class HomeController @Inject()(urlStore: URLStorage, configuration: Configuration) extends InjectedController {
   private implicit val ec: ExecutionContext =
-    actorSystem.dispatchers.lookup("controller-context")
+    ThreadPools.Global
 
-  val jwtConfig: JwtConfig =
-    applicationModules.configurationProvider.jwtConfiguration
+  private val host: String =
+    configuration.get[String]("host")
 
-  def failSafe(request: Request[_]): Call =
-    routes.AuthenticationController.login(Some(request.path))
-
-  /**
-    * Create an Action to render an HTML admin landing page.
-    * The configuration in the `routes` file means that this method
-    * will be called when the application receives a `GET` request with
-    * a path of `/`, `/index`, `/index.html`.
-    */
   def index: Action[AnyContent] =
-    AuthorizedAction(parser, jwtConfig, failSafe)(ec) {
-      Ok(views.html.index())
+    Action(parse.empty)(Ok(views.html.index(None)))
+
+  def shorten: Action[AnyContent] =
+    Action.async { implicit request =>
+      URLRequest
+        .form
+        .bindFromRequest
+        .fold({ binding =>
+          val alert =
+            Alert(s"Invalid URL", Alert.Error)
+
+          Future.successful(Ok(views.html.index(Some(alert))))
+        }, { url =>
+          urlStore
+            .upsert(url)
+            .map { token =>
+              Ok(views.html.shortened(buildURL(token))(None))
+            }
+        })
     }
+
+  private def buildURL(token: Token): String =
+    s"$host/$token"
 }

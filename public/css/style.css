@@ -1,0 +1,39 @@
+.logo {
+    font-family: 'Product Sans', Arial, sans-serif;
+    font-size: 80px;
+    font-weight: 600;
+    text-align: center;
+    padding: 10px;
+}
+
+.alert {
+    margin-top: 25px;
+}
+
+.vertical-center{
+    transform: translateY(50%);
+}
+
+.parent-center-content {
+    text-align: center;
+}
+
+.horizontal-center {
+    margin: auto;
+    width: 100%;
+}
+
+.center.navbar .nav,
+.center.navbar .nav > li {
+    float: none;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.center .navbar-inner {
+    text-align: center;
+}
+
+.center .dropdown-menu {
+    text-align: left;
+}
