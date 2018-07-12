@@ -1,10 +1,10 @@
 @import models.Alert
-@(url: String)(alertOpt: Option[Alert])
+@(path: String, shortenedUrl: String, originalUrl: String)(alertOpt: Option[Alert])
 @main(alertOpt){
     <div class="container vertical-center">
         <div class="row">
-            <h1 class="logo">
-                <a href="@url">@url</a>
+            <h1 class="url">
+                <a href="/@path">@shortenedUrl</a> 🡒 <a href="@originalUrl">@originalUrl</a>
             </h1>
         </div>
         <div class="row">

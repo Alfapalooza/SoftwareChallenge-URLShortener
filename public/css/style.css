@@ -6,6 +6,13 @@
     padding: 10px;
 }
 
+.url {
+    font-family: 'Product Sans', Arial, sans-serif;
+    font-size: 40px;
+    text-align: center;
+    padding: 10px;
+}
+
 .alert {
     margin-top: 25px;
 }

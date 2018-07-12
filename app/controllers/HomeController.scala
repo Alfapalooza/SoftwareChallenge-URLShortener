@@ -38,7 +38,7 @@ class HomeController @Inject()(urlStore: URLStorage, configuration: Configuratio
           urlStore
             .upsert(url)
             .map { token =>
-              Ok(views.html.shortened(buildURL(token))(None))
+              Ok(views.html.shortened(token, buildURL(token), url.toString)(None))
             }
         })
     }
