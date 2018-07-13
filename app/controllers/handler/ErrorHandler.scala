@@ -6,6 +6,7 @@ import com.google.inject.Inject
 
 import org.shortener.loggers.impl.ErrorLogger
 
+import models.Alert
 import models.exceptions.ServiceResponseException
 
 import play.api.http.HttpErrorHandler
@@ -37,7 +38,10 @@ class ErrorHandler @Inject()(errorLogger: ErrorLogger) extends HttpErrorHandler 
       case Some(header) if header.contains("text/html") || header.contains("application/xml") || header.contains("application/xhtml+xml") =>
         error match {
           case ex =>
-            Future.successful(Status(status)(views.html.error(ex.getMessage)))
+            val alert =
+              Alert(ex.getMessage, Alert.Error)
+
+            Future.successful(Status(status)(views.html.index(Some(alert))))
         }
       case _ =>
         error match {
