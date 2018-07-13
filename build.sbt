@@ -10,8 +10,13 @@ val utils =
     "net.codingwell" %% "scala-guice" % "4.1.0",
     "org.apache.commons" % "commons-collections4" % "4.2")
 
+val tests =
+  Seq(
+    "org.specs2" %% "specs2-core" % "4.3.2" % Test,
+    "org.specs2" %% "specs2-junit" % "4.3.2" % Test)
+
 libraryDependencies ++=
-  utils :+ guice
+  utils ++ tests :+ guice
 
 javacOptions ++=
   Seq(

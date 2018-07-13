@@ -13,7 +13,7 @@ import scala.annotation.tailrec
 import scala.concurrent.{ExecutionContext, Future}
 
 class URLMemoryStorage extends URLStorage {
-  private lazy val urls =
+  protected lazy val urls =
     new DualHashBidiMap[Token, URL]
 
   override def upsert(url: URL)(implicit ec: ExecutionContext): Future[Token] =
