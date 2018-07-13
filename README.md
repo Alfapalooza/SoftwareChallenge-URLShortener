@@ -14,5 +14,5 @@ And then go to http://localhost:9000 to see the running web application.
 
 
 ## Notes
-- When entering a url, use the full url format, include protocol and host at least.
+- When entering a url, use the full url format include protocol and host at least.
 - Works with ports, paths, queries, etc.
