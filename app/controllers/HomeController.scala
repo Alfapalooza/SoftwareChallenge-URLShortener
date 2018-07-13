@@ -36,7 +36,7 @@ class HomeController @Inject()(urlStore: URLStorage, configuration: Configuratio
           Future.successful(Ok(views.html.index(Some(alert))))
         }, { url =>
           urlStore
-            .upsert(url)
+            .upsert(url)(ThreadPools.Storage)
             .map { token =>
               Ok(views.html.shortened(token, buildURL(token), url.toString)(None))
             }

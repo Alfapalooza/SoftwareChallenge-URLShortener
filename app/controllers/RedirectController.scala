@@ -17,5 +17,5 @@ class RedirectController @Inject()(urlStore: URLStorage) extends InjectedControl
     ThreadPools.Global
 
   def redirect(token: Token): Action[AnyContent] =
-    Action.async(urlStore.fetch(token).map(url => Redirect(url.toString)))
+    Action.async(urlStore.fetch(token)(ThreadPools.Storage).map(url => Redirect(url.toString)))
 }
